@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU Scheduling Simulator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>CPU Scheduling Simulator</h2>
+
+    <div class="container">
+        <!-- Input Section -->
+        <div class="input-section">
+            <table>
+                <tr>
+                    <th>Process ID</th>
+                    <th>Arrival Time</th>
+                    <th>Burst Time</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td><input type="text" id="processId" placeholder="Process ID"></td>
+                    <td><input type="number" id="arrivalTime" placeholder="Arrival Time"></td>
+                    <td><input type="number" id="burstTime" placeholder="Burst Time"></td>
+                    <td><button onclick="addProcess()">Add</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scheduling Method Selection -->
+        <div class="scheduling-method">
+            <label>Select Scheduling Method:</label>
+            <select id="schedulingMethod" onchange="toggleQuantumInput()">
+                <option value="fcfs">First Come First Serve (FCFS)</option>
+                <option value="rr">Round Robin (RR)</option>
+            </select>
+            
+            <!-- Quantum Time for Round Robin (Hidden by Default) -->
+            <div id="quantumInput" style="display: none;">
+                <label>Quantum Time:</label>
+                <input type="number" id="quantumTime" placeholder="Enter Quantum">
+            </div>
+            
+            <button onclick="calculateSchedule()">Calculate</button>
+        </div>
+
+        <!-- Process Table -->
+        <table id="processTable">
+            <tr>
+                <th>Process ID</th>
+                <th>Arrival Time</th>
+                <th>Burst Time</th>
+                <th>Completion Time</th>
+                <th>Waiting Time</th>
+                <th>Turnaround Time</th>
+            </tr>
+        </table>
+
+        <!-- Metrics Section -->
+        <div class="metrics">
+            <label>Average Turnaround Time:</label>
+            <input type="text" id="avgTurnaroundTime" readonly value="0">
+            <br>
+
+            <label>Average Waiting Time:</label>
+            <input type="text" id="avgWaitingTime" readonly value="0">
+            <br>
+
+            <label>Throughput:</label>
+            <br>
+            <input type="text" id="throughput" readonly value="0">
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <script>
+        function toggleQuantumInput() {
+            let method = document.getElementById("schedulingMethod").value;
+            let quantumDiv = document.getElementById("quantumInput");
+
+            if (method === "rr") {
+                quantumDiv.style.display = "block";
+            } else {
+                quantumDiv.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
