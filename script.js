@@ -44,7 +44,6 @@ function calculateSchedule() {
     }
 }
 
-// First Come, First Served (FCFS) Scheduling
 function calculateFCFS() {
     processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
     
@@ -68,7 +67,6 @@ function calculateFCFS() {
     updateResults(totalTurnaroundTime, totalWaitingTime);
 }
 
-// Round Robin Scheduling
 function calculateRoundRobin() {
     let quantum = parseInt(document.getElementById("quantumTime").value);
 
@@ -82,7 +80,7 @@ function calculateRoundRobin() {
     let completionTime = {};
     let waitingTime = {};
     let turnaroundTime = {};
-    let arrivalQueue = [...processes]; // Copy processes sorted by arrival
+    let arrivalQueue = [...processes]; 
     let firstResponse = {};
 
     // Initialize burst times
@@ -91,16 +89,14 @@ function calculateRoundRobin() {
         completionTime[p.processId] = 0;
         waitingTime[p.processId] = 0;
         turnaroundTime[p.processId] = 0;
-        firstResponse[p.processId] = -1;  // Track first execution time
+        firstResponse[p.processId] = -1;  
     });
 
     let time = 0;
     let remainingProcesses = processes.length;
 
-    // Sort processes by arrival time
     arrivalQueue.sort((a, b) => a.arrivalTime - b.arrivalTime);
 
-    // Load first processes into queue
     while (arrivalQueue.length > 0 && arrivalQueue[0].arrivalTime <= time) {
         queue.push(arrivalQueue.shift());
     }
@@ -110,19 +106,17 @@ function calculateRoundRobin() {
             let process = queue.shift();
 
             if (firstResponse[process.processId] === -1) {
-                firstResponse[process.processId] = time; // Track first execution time
+                firstResponse[process.processId] = time; 
             }
 
             let executeTime = Math.min(quantum, remainingBurst[process.processId]);
             remainingBurst[process.processId] -= executeTime;
             time += executeTime;
 
-            // Add newly arrived processes to queue
             while (arrivalQueue.length > 0 && arrivalQueue[0].arrivalTime <= time) {
                 queue.push(arrivalQueue.shift());
             }
 
-            // If process is not finished, push it back to the queue
             if (remainingBurst[process.processId] > 0) {
                 queue.push(process);
             } else {
@@ -130,7 +124,6 @@ function calculateRoundRobin() {
                 remainingProcesses--;
             }
         } else {
-            // Move time forward if no process is available
             time++;
             while (arrivalQueue.length > 0 && arrivalQueue[0].arrivalTime <= time) {
                 queue.push(arrivalQueue.shift());
@@ -138,7 +131,6 @@ function calculateRoundRobin() {
         }
     }
 
-    // Calculate waiting time and turnaround time
     processes.forEach(p => {
         turnaroundTime[p.processId] = completionTime[p.processId] - p.arrivalTime;
         waitingTime[p.processId] = turnaroundTime[p.processId] - p.burstTime;
@@ -148,7 +140,6 @@ function calculateRoundRobin() {
 }
 
 
-// Update Process Table with Results for Round Robin
 function updateResultsRR(completionTime, waitingTime, turnaroundTime) {
     let table = document.getElementById("processTable");
     
@@ -181,7 +172,6 @@ function updateResultsRR(completionTime, waitingTime, turnaroundTime) {
     document.getElementById("throughput").value = throughput.toFixed(2);
 }
 
-// Update Process Table with Results for FCFS
 function updateResults(totalTurnaroundTime, totalWaitingTime) {
     let table = document.getElementById("processTable");
 
@@ -207,3 +197,4 @@ function updateResults(totalTurnaroundTime, totalWaitingTime) {
     document.getElementById("avgWaitingTime").value = avgWaiting.toFixed(2);
     document.getElementById("throughput").value = throughput.toFixed(2);
 }
+
